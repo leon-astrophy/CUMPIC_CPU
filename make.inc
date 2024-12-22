@@ -6,7 +6,7 @@
 # section for Fortran compiler #
 
 # MPI fortran #
-F90 = /home/leon/HDF5-GPU/bin/h5pfc 
+F90 = h5pfc 
 
 # MPI fortran #
 #F90 = mpifort
@@ -33,9 +33,12 @@ F90 = /home/leon/HDF5-GPU/bin/h5pfc
 ######################################################
 # these are for standard gcc
 
-# Define F90 flags #
-F90FLAGS= -cpp -fast -O4 -Mconcur -Munroll -Mdalign -Mframe -Mlre -Mstack_arrays -Mvect=short -Mvect=prefetch -Mipa=fast,inline -Mvect=levels:4 -Mvect=fuse -Mvect=gather -Mvect=idiom -Mvect=altcode -Mvect=simd $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE) 
+# HPC flags
+#HPC = -fast -O4 -Mconcur -Munroll -Mdalign -Mframe -Mlre -Mstack_arrays -Mvect=short -Mvect=prefetch -Mipa=fast,inline -Mvect=levels:4 -Mvect=fuse -Mvect=gather -Mvect=idiom -Mvect=altcode -Mvect=simd 
 
-LDFLAGS= -cpp -fast -O4 -Mconcur -Munroll -Mdalign -Mframe -Mlre -Mstack_arrays -Mvect=short -Mvect=prefetch -Mipa=fast,inline -Mvect=levels:4 -Mvect=fuse -Mvect=gather -Mvect=idiom -Mvect=altcode -Mvect=simd $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE)   
+# Define F90 flags #
+F90FLAGS= -cpp $(HPC) $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE) 
+
+LDFLAGS= -cpp $(HPC) $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE)   
           
 ######################################################
