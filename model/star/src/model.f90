@@ -38,7 +38,6 @@ a_phi = 0.0d0
 ! OPEN(UNIT=970, FILE = './profile/hydro_rho.dat', ACTION='READ')
 ! READ(970,*) ((prim(irho,j,k,1), j = 1, nx), k = 1, ny)
 ! CLOSE(970)
-
 OPEN(UNIT=970, FILE = './hydro_rho.dat', ACTION='READ')
 READ(970,*) (prim(irho,j,1,1), j = 1, nx)
 CLOSE(970)
@@ -48,10 +47,11 @@ DO k = 1, ny
 END DO
 prim(irho,:,:,:) = prim(irho,:,:,:)*rhocgs2code
 PRINT *, "Finished reading rho"
+prim(irho,:,:,:) = MAX(atmosphere, prim(irho,:,:,:))
 
 ! Assign velocity !
-prim(ivx,:,:,1) = 0.0d0
-prim(ivy,:,:,1) = 0.0d0
+prim(ivx,:,:,:) = 0.0d0
+prim(ivy,:,:,:) = 0.0d0
 
 ! Read and assign velocity_z !
 ! OPEN(UNIT=970, FILE = './profile/hydro_vphi.dat', ACTION='READ')

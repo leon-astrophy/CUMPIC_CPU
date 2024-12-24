@@ -176,13 +176,13 @@ DO l = 1, nz
       dphidx = first_derivative (xm, xl, xp, phi(j-1,k,l), phi(j,k,l), phi(j+1,k,l))
       dphidy = first_derivative (ym, yl, yp, phi(j,k-1,l), phi(j,k,l), phi(j,k+1,l))
 
-      ! ! Add them to the source term !
-      ! sc(ivx,j,k,l) = sc(ivx,j,k,l) - factor*prim(irho,j,k,l)*dphidx
-      ! sc(ivy,j,k,l) = sc(ivy,j,k,l) - factor*prim(irho,j,k,l)*dphidy/xl
-      ! ! sc(itau,j,k,l) = sc(itau,j,k,l) - factor*prim(irho,j,k,l)* &
-      !                   ! (prim(ivx,j,k,l)*dphidx + prim(ivy,j,k,l)*dphidy/xl)
+      ! Add them to the source term !
+      sc(ivx,j,k,l) = sc(ivx,j,k,l) - factor*prim(irho,j,k,l)*dphidx
+      sc(ivy,j,k,l) = sc(ivy,j,k,l) - factor*prim(irho,j,k,l)*dphidy/xl
       ! sc(itau,j,k,l) = sc(itau,j,k,l) - factor*prim(irho,j,k,l)* &
-      !                   (prim(ivx,j,k,l)*dphidx + prim(ivy,j,k,l)*dphidy/xl)
+                        ! (prim(ivx,j,k,l)*dphidx + prim(ivy,j,k,l)*dphidy/xl)
+      sc(itau,j,k,l) = sc(itau,j,k,l) - factor*prim(irho,j,k,l)* &
+                        (prim(ivx,j,k,l)*dphidx + prim(ivy,j,k,l)*dphidy/xl)
     END DO
   END DO
 END DO
@@ -223,13 +223,13 @@ REAL*8 :: rho_in, factor, diff
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Update gravitational potentials !
 
-! DO l = 1, nz
-!   DO k = 1, ny
-!     DO j = 1, nx
-!       CALL EOS_EPSILON(prim(irho,j,k,l),prim(itau,j,k,l),eps(j,k,l))
-!     END DO
-!   END DO
-! END DO
+DO l = 1, nz
+  DO k = 1, ny
+    DO j = 1, nx
+      CALL EOS_EPSILON(prim(irho,j,k,l),prim(itau,j,k,l),eps(j,k,l))
+    END DO
+  END DO
+END DO
 
 
 
@@ -321,7 +321,11 @@ IF (p_in == 0 .OR. MOD(n_step, n_pot) == 0) THEN
     DO l = 1, nz
       DO k = 1, ny
         DO j = 1, nx
-          abserror = max(abserror, abs((phi(j,k,l) - phi_old(j,k,l)) / phi_old(j,k,l)))
+          IF (phi_old(j,k,l) /= 0.0d0) THEN
+            abserror = max(abserror, abs((phi(j,k,l) - phi_old(j,k,l)) / phi_old(j,k,l)))
+          ELSE
+            abserror = max(abserror, abs(phi(j,k,l)))
+          END IF
         END DO
       END DO
     END DO

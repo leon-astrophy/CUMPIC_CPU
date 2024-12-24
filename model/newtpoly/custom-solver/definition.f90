@@ -84,15 +84,15 @@ INTEGER, PARAMETER :: coordinate = spherical
 ! 2 = reflecting boundary (depend on scalar/vector)
 ! 3 = axis-symmetric
 ! 4 = equatorial-symmetric
-INTEGER, PARAMETER :: boundary_flag(6) = (/1,1,0,0,0,0/)
+INTEGER, PARAMETER :: boundary_flag(6) = (/2,1,0,0,0,0/)
 
 ! Starting position of the grid !
-REAL*8, PARAMETER :: x_start = 3.0d0
+REAL*8, PARAMETER :: x_start = 1.0d-5
 REAL*8, PARAMETER :: y_start = 0.02d0
 REAL*8, PARAMETER :: z_start = 0.0d0
 
 ! Ending position of the grid !
-REAL*8, PARAMETER :: x_end = 1000.0d0
+REAL*8, PARAMETER :: x_end = 20.0d0
 REAL*8, PARAMETER :: y_end = pi - 0.02d0
 REAL*8, PARAMETER :: z_end = 2.0d0*pi
 
@@ -129,7 +129,7 @@ REAL*8, PARAMETER :: output_logtime = 100.0d0
 
 ! Physical time interval for each hydro profile
 REAL*8 :: output_profiletime_last = 0.0D0
-REAL*8, PARAMETER :: output_profiletime = 10.0d0
+REAL*8, PARAMETER :: output_profiletime = 1.0d0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for riemann solvers

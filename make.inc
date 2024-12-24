@@ -33,12 +33,13 @@ F90 = h5pfc
 ######################################################
 # these are for standard gcc
 
-# HPC flags
+# compiler flags
 #HPC = -fast -O4 -Mconcur -Munroll -Mdalign -Mframe -Mlre -Mstack_arrays -Mvect=short -Mvect=prefetch -Mipa=fast,inline -Mvect=levels:4 -Mvect=fuse -Mvect=gather -Mvect=idiom -Mvect=altcode -Mvect=simd 
+ifort = -traceback
 
 # Define F90 flags #
-F90FLAGS= -cpp $(HPC) $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE) 
+F90FLAGS= -cpp $(ifort) $(HPC) $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE) 
 
-LDFLAGS= -cpp $(HPC) $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE)   
+LDFLAGS= -cpp $(ifort) $(HPC) $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE)   
           
 ######################################################
