@@ -21,7 +21,7 @@ OBJ = $(patsubst %.f90,%.o,$(SRC))
 DEF_OBJ = definition.o
 CUS_MOD = def.o
 
-OTHER_OBJ = $(filter-out $(SIMPLE_MOD) $(DEF_OBJ), $(OBJ))
+OTHER_OBJ = $(filter-out $(CUS_MOD) $(DEF_OBJ), $(OBJ))
 
 #you can use make -j to build in parallel#
 ALL: $(OBJ)

@@ -26,7 +26,7 @@ SAVE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Number of CPUs along the first dimension
-INTEGER, PARAMETER :: NXCPU = 1
+INTEGER, PARAMETER :: NXCPU = 5
 
 ! Number of CPUs along the second dimension
 INTEGER, PARAMETER :: NYCPU = 1
@@ -54,7 +54,7 @@ REAL*8, PARAMETER :: small_num = TINY(1.0D0)
 INTEGER, PARAMETER :: NGHOST = 3
 
 ! Number of dimension !
-INTEGER, PARAMETER :: NDIM = 1
+INTEGER, PARAMETER :: NDIM = 2
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for Core part of the simulation box
@@ -84,21 +84,21 @@ INTEGER, PARAMETER :: coordinate = spherical
 ! 2 = reflecting boundary (depend on scalar/vector)
 ! 3 = axis-symmetric
 ! 4 = equatorial-symmetric
-INTEGER, PARAMETER :: boundary_flag(6) = (/2,1,0,0,0,0/)
+INTEGER, PARAMETER :: boundary_flag(6) = (/2,1,3,3,0,0/)
 
 ! Starting position of the grid !
-REAL*8, PARAMETER :: x_start = 1.0d-5
-REAL*8, PARAMETER :: y_start = 0.02d0
+REAL*8, PARAMETER :: x_start = 1.0d-1
+REAL*8, PARAMETER :: y_start = 0.2d0
 REAL*8, PARAMETER :: z_start = 0.0d0
 
 ! Ending position of the grid !
-REAL*8, PARAMETER :: x_end = 20.0d0
-REAL*8, PARAMETER :: y_end = pi - 0.02d0
+REAL*8, PARAMETER :: x_end = 30.0d0
+REAL*8, PARAMETER :: y_end = pi-0.2d0
 REAL*8, PARAMETER :: z_end = 2.0d0*pi
 
 ! The total number of grid in the x, y, z direction
-INTEGER, PARAMETER :: nxtot = 400
-INTEGER, PARAMETER :: nytot = 1
+INTEGER, PARAMETER :: nxtot = 250
+INTEGER, PARAMETER :: nytot = 20
 INTEGER, PARAMETER :: nztot = 1
 
 ! Grid sizes for uniform grid 
@@ -148,7 +148,7 @@ INTEGER, PARAMETER :: HLLC = 3
 INTEGER, PARAMETER :: HLLD = 4
 
 ! Define reconstruction method #
-INTEGER, PARAMETER :: SOLVER = HLL
+INTEGER, PARAMETER :: SOLVER = HLLD
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for primitive reconstructions
