@@ -47,7 +47,6 @@ END SUBROUTINE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE GET_COORD(j_in,k_in,l_in,x_out,y_out,z_out)
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -75,7 +74,6 @@ END SUBROUTINE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE COORD_DX(j_in,k_in,l_in,dx_out,dy_out,dz_out)
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -103,9 +101,6 @@ END SUBROUTINE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE GEOM_SOURCE(j_in,k_in,l_in)
-!$ACC ROUTINE (GET_COORD) SEQ
-!$ACC ROUTINE (COORD_DX) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -171,9 +166,6 @@ END SUBROUTINE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE GEOM_AREA(j_in,k_in,l_in,axp,axm,ayp,aym,azp,azm)
-!$ACC ROUTINE (GET_COORD) SEQ
-!$ACC ROUTINE (COORD_DX) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -229,9 +221,6 @@ END SUBROUTINE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE GEOM_FLUX(dir_in,j_in,k_in,l_in,geom_flux_p,geom_flux_c,geom_flux_m)
-!$ACC ROUTINE (GET_COORD) SEQ
-!$ACC ROUTINE (COORD_DX) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -310,9 +299,6 @@ END SUBROUTINE
 SUBROUTINE GEOM_CT(j_in, k_in, l_in, g_bx_ez_m, g_bx_ez_c, g_bx_ez_p, g_bx_ey_m, g_bx_ey_c, g_bx_ey_p, &
 g_by_ex_m, g_by_ex_c, g_by_ex_p, g_by_ez_m, g_by_ez_c, g_by_ez_p, g_bz_ex_m, g_bz_ex_c, g_bz_ex_p, g_bz_ey_m, &
 g_bz_ey_c, g_bz_ey_p)
-!$ACC ROUTINE (GET_COORD) SEQ
-!$ACC ROUTINE (COORD_DX) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 

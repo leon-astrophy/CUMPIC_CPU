@@ -13,7 +13,6 @@
 !
 !***********************************************************************
 SUBROUTINE find_divb
-!$ACC ROUTINE (GEOM_AREA) SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -71,7 +70,6 @@ END SUBROUTINE
 !
 !***********************************************************************
 SUBROUTINE flux_ct
-!$ACC ROUTINE (GEOM_CT) SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -92,7 +90,6 @@ REAL*8 :: g_bz_ey_m, g_bz_ey_c, g_bz_ey_p
 !---------------------------------------------------------------------------------------------------------!
 
 ! Find cell-centered electric fields !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
 DO l = 0, nz + 1
   DO k = 0, ny + 1
     DO j = 0, nx + 1
@@ -102,12 +99,10 @@ DO l = 0, nz + 1
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !---------------------------------------------------------------------------------------------------------!
 
 ! upwind constrained transport !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -122,14 +117,10 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !---------------------------------------------------------------------------------------------------------!
 
 ! Update rungekutta operator !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) PRIVATE(g_bx_ez_m, g_bx_ez_c, g_bx_ez_p, &
-!$ACC g_bx_ey_m, g_bx_ey_c, g_bx_ey_p, g_by_ex_m, g_by_ex_c, g_by_ex_p, g_by_ez_m, g_by_ez_c, g_by_ez_p, &
-!$ACC g_bz_ex_m, g_bz_ex_c, g_bz_ex_p, g_bz_ey_m, g_bz_ey_c, g_bz_ey_p)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -150,7 +141,6 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !---------------------------------------------------------------------------------------------------------!
 

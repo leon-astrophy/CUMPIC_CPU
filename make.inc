@@ -1,41 +1,33 @@
-######################################################
+#***************************************************************
 #
 # make.inc file incluing compilation flags
 #
-######################################################
+#***************************************************************
 # section for Fortran compiler #
 
-# MPI fortran #
-F90 = /home/leon/HDF5-GPU/bin/h5pfc 
+# Link to MPI fortran, prefer h5pfc #
+F90 = h5pfc
 
-# MPI fortran #
-#F90 = mpifort
-#PARALLEL = -DMPI
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+# section for parallel computing 
 
-######################################################
-# Section for GPU #
+# use MPI? #
+PARALLEL = -DMPI
 
-# Choose between CPU or GPU threading #
-#MULTICORE = -DGPU -acc
+# use OPENMP? #
+MULTICORE = -fopenmp
 
-######################################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 # section for math packages #
 
 # need extra math packages? #
 #MATHPACK = -llapack -lblas
 
-######################################################
-# Section for debug #
-
-# Want to look for compilation message? #
-#COMPILE = -Minfo=accel
-
-######################################################
-# these are for standard gcc
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+# these are for standard gcc compiler flags
 
 # Define F90 flags #
-F90FLAGS= -cpp -fast -O4 -Mconcur -Munroll -Mdalign -Mframe -Mlre -Mstack_arrays -Mvect=short -Mvect=prefetch -Mipa=fast,inline -Mvect=levels:4 -Mvect=fuse -Mvect=gather -Mvect=idiom -Mvect=altcode -Mvect=simd $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE) 
-
-LDFLAGS= -cpp -fast -O4 -Mconcur -Munroll -Mdalign -Mframe -Mlre -Mstack_arrays -Mvect=short -Mvect=prefetch -Mipa=fast,inline -Mvect=levels:4 -Mvect=fuse -Mvect=gather -Mvect=idiom -Mvect=altcode -Mvect=simd $(PARALLEL) $(MULTICORE) $(MATHPACK) $(COMPILE)   
+F90FLAGS= -cpp -Ofast -O4 -march=native -mtune=native -flto -funroll-loops -ftree-vectorize -pipe -ffree-line-length-999 $(PARALLEL) $(MULTICORE) $(MATHPACK) 
+LDFLAGS= -cpp -Ofast -O4 -march=native -mtune=native -flto -funroll-loops -ftree-vectorize -pipe -ffree-line-length-999 $(PARALLEL) $(MULTICORE) $(MATHPACK)
           
-######################################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#

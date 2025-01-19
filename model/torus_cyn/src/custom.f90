@@ -26,9 +26,6 @@ USE DEFINITION
 USE PARAMETER
 IMPLICIT NONE
 
-! Atmospheric values ... !
-!$ACC UPDATE DEVICE(rho_floor, eps_floor) 
-
 END SUBROUTINE
 
 !!!!!!!!!!!!!!!!!!!!!!!!
@@ -54,8 +51,6 @@ INTEGER :: i, j, k, l
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!$ACC PARALLEL DEFAULT(PRESENT)
-!$ACC LOOP GANG WORKER VECTOR COLLAPSE(3) 
 DO l = -2, nz + 3
   DO k = -2, ny + 3
     DO j = 1, 3
@@ -65,7 +60,6 @@ DO l = -2, nz + 3
   END DO               
 ENDDO
 
-!$ACC LOOP GANG WORKER VECTOR COLLAPSE(3) 
 DO l = 1, 3
   DO k = -2, ny + 3
     DO j = -2, nx + 3
@@ -74,7 +68,6 @@ DO l = 1, 3
     END DO
   END DO               
 ENDDO 
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -93,7 +86,6 @@ INTEGER :: i, j, k, l
   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -109,7 +101,6 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -119,8 +110,6 @@ END SUBROUTINE
 ! Building custom equations !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE CUSTOM_SOURCE
-!$ACC ROUTINE (GET_COORD) SEQ
-!$ACC ROUTINE (COORD_DX) SEQ
 USE DEFINITION
 USE PARAMETER
 IMPLICIT NONE
@@ -142,7 +131,6 @@ REAL*8 :: dx_loc, dy_loc, dz_loc
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Add black hole gravity !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) PRIVATE(radius, dphidr, dphidz, factor, diff)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -159,7 +147,6 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

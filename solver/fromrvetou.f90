@@ -19,7 +19,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE FROMRVETOU
-!$ACC ROUTINE (P_to_U) SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -37,7 +36,6 @@ REAL*8 :: geom_bcell_z_r
 !------------------------------------------------------------------------------------------!
 ! Get cell centered magnetic field !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -47,12 +45,10 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !------------------------------------------------------------------------------------------!
 ! Convert primitive to conservative !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -63,7 +59,6 @@ DO l = 0, nz
 	  END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -73,7 +68,6 @@ END SUBROUTINE
 ! Convert back to primitive variables !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE FROMUTORVE
-!$ACC ROUTINE (U_to_P) SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -94,7 +88,6 @@ REAL*8 :: geom_bcell_z_r
 !------------------------------------------------------------------------------------------!
 ! Get cell centered magnetic field !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -104,12 +97,10 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Do the rest conversation !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -120,7 +111,6 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

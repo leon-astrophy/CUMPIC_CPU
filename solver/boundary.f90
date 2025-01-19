@@ -89,11 +89,9 @@ END IF
 !------------------------------------------------------------------------------------
 ! Do the inner boundary
 
-!$ACC PARALLEL DEFAULT(PRESENT)
 !****************************************************************************
 IF(boundary_flag(1) == 0) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)   
   DO l = 1, NZ
     DO k =  1, NY
       DO j = 1, NGHOST 
@@ -104,7 +102,6 @@ IF(boundary_flag(1) == 0) THEN
 
 ELSEIF(boundary_flag(1) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)   
   DO l = 1, NZ
     DO k =  1, NY
       DO j = 1, NGHOST 
@@ -114,8 +111,7 @@ ELSEIF(boundary_flag(1) == 1) THEN
   ENDDO
 
 ELSEIF(boundary_flag(1) >= 2) THEN     
- 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)       
+     
   DO l = 1, NZ
     DO k =  1, NY
       DO j = 1, NGHOST 
@@ -129,8 +125,7 @@ ENDIF
 !****************************************************************************
 ! Do the outer boundary
 IF(boundary_flag(2) == 0) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)   
+  
   DO l = 1, NZ
     DO k =  1, NY
       DO j = 1, NGHOST 
@@ -140,8 +135,7 @@ IF(boundary_flag(2) == 0) THEN
   ENDDO
 
 ELSEIF(boundary_flag(2) == 1) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
+ 
   DO l = 1, NZ
     DO k =  1, NY
       DO j = 1, NGHOST 
@@ -151,8 +145,7 @@ ELSEIF(boundary_flag(2) == 1) THEN
   ENDDO
 
 ELSEIF(boundary_flag(2) >= 2) THEN 
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
+ 
   DO l = 1, NZ
     DO k =  1, NY
       DO j = 1, NGHOST 
@@ -163,7 +156,6 @@ ELSEIF(boundary_flag(2) >= 2) THEN
 
 ENDIF
 !****************************************************************************
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! y-boundary
@@ -171,11 +163,9 @@ ENDIF
 !------------------------------------------------------------------------------------
 ! Do the inner boundary
 
-!$ACC PARALLEL DEFAULT(PRESENT)
 !****************************************************************************
 IF(boundary_flag(3) == 0) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
+    
   DO l = 1, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -183,9 +173,9 @@ IF(boundary_flag(3) == 0) THEN
       END DO
     END DO
   ENDDO
+
 ELSEIF(boundary_flag(3) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)   
   DO l = 1, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -193,9 +183,9 @@ ELSEIF(boundary_flag(3) == 1) THEN
       END DO
     END DO
   ENDDO
-ELSEIF(boundary_flag(3) >= 2) THEN   
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)                  
+ELSEIF(boundary_flag(3) >= 2) THEN   
+             
   DO l = 1, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -209,8 +199,7 @@ ENDIF
 !****************************************************************************
 ! Do the outer boundary
 IF(boundary_flag(3) == 0) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
+ 
   DO l = 1, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -220,8 +209,7 @@ IF(boundary_flag(3) == 0) THEN
   ENDDO
 
 ELSEIF(boundary_flag(4) == 1) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
+   
   DO l = 1, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -232,7 +220,6 @@ ELSEIF(boundary_flag(4) == 1) THEN
 
 ELSEIF(boundary_flag(4) >= 2) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)   
   DO l = 1, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -243,7 +230,6 @@ ELSEIF(boundary_flag(4) >= 2) THEN
 
 ENDIF
 !****************************************************************************
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! z-boundary
@@ -251,11 +237,9 @@ ENDIF
 !------------------------------------------------------------------------------------
 ! Do the inner boundary
 
-!$ACC PARALLEL DEFAULT(PRESENT)
 !****************************************************************************
 IF(boundary_flag(5) == 0) THEN   
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)      
+   
   DO l = 1, NGHOST
     DO k =  1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -265,8 +249,7 @@ IF(boundary_flag(5) == 0) THEN
   ENDDO
 
 ELSEIF(boundary_flag(5) == 1) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)   
+ 
   DO l = 1, NGHOST
     DO k =  1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -276,8 +259,7 @@ ELSEIF(boundary_flag(5) == 1) THEN
   ENDDO
 
 ELSEIF(boundary_flag(5) >= 2) THEN   
- 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)         
+        
   DO l = 1, NGHOST
     DO k =  1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -291,8 +273,7 @@ ENDIF
 !****************************************************************************
 ! Do the outer boundary
 IF(boundary_flag(6) == 0) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)    
+  
   DO l = 1, NGHOST
     DO k =  1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -303,7 +284,6 @@ IF(boundary_flag(6) == 0) THEN
 
 ELSEIF(boundary_flag(6) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
   DO l = 1, NGHOST
     DO k =  1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -313,8 +293,7 @@ ELSEIF(boundary_flag(6) == 1) THEN
   ENDDO
 
 ELSEIF(boundary_flag(6) >= 2) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
+   
   DO l = 1, NGHOST
     DO k =  1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -325,7 +304,6 @@ ELSEIF(boundary_flag(6) >= 2) THEN
 
 END IF
 !****************************************************************************
-!$ACC END PARALLEL
 
 !****************************************************************************
 ! MPI passing boundary values !
@@ -359,11 +337,9 @@ INTEGER :: i, j, k, l
 !------------------------------------------------------------------------------------
 
 ! Do the inner boundary
-!$ACC PARALLEL DEFAULT(PRESENT)
 !****************************************************************************
 IF(boundary_flag(1) == 0) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)     
   DO l = 0, NZ
     DO k = 0, NY 
       DO j = 1, NGHOST
@@ -377,7 +353,6 @@ IF(boundary_flag(1) == 0) THEN
 
 ELSEIF(boundary_flag(1) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 0, NY 
       DO j = 1, NGHOST
@@ -391,7 +366,6 @@ ELSEIF(boundary_flag(1) == 1) THEN
 
 ELSEIF(boundary_flag(1) >= 2) THEN    
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 0, NY  
       DO j = 1, NGHOST
@@ -409,7 +383,6 @@ ENDIF
 ! Do the outer boundary
 IF(boundary_flag(2) == 0) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 0, NY 
       DO j = 1, NGHOST
@@ -422,8 +395,7 @@ IF(boundary_flag(2) == 0) THEN
   ENDDO
     
 ELSEIF(boundary_flag(2) == 1) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
+  
   DO l = 0, NZ
     DO k = 0, NY 
       DO j = 1, NGHOST
@@ -436,8 +408,7 @@ ELSEIF(boundary_flag(2) == 1) THEN
   ENDDO
 
 ELSEIF(boundary_flag(2) >= 2) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
+  
   DO l = 0, NZ
     DO k = 0, NY 
       DO j = 1, NGHOST
@@ -451,7 +422,6 @@ ELSEIF(boundary_flag(2) >= 2) THEN
 
 ENDIF
 !****************************************************************************
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! y-boundary 
@@ -459,11 +429,9 @@ ENDIF
 !------------------------------------------------------------------------------------
 ! Do the inner boundary
 
-!$ACC PARALLEL DEFAULT(PRESENT)
 !****************************************************************************
 IF(boundary_flag(3) == 0) THEN
-
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
+  
   DO l = 0, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -477,7 +445,6 @@ IF(boundary_flag(3) == 0) THEN
 
 ELSEIF(boundary_flag(3) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -491,7 +458,6 @@ ELSEIF(boundary_flag(3) == 1) THEN
 
 ELSEIF(boundary_flag(3) >= 2) THEN    
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -509,7 +475,6 @@ ENDIF
 ! Do the outer boundary
 IF(boundary_flag(4) == 0) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -523,7 +488,6 @@ IF(boundary_flag(4) == 0) THEN
 
 ELSEIF(boundary_flag(4) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -537,7 +501,6 @@ ELSEIF(boundary_flag(4) == 1) THEN
 
 ELSEIF(boundary_flag(4) >= 2) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 0, NZ
     DO k = 1, NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -551,7 +514,6 @@ ELSEIF(boundary_flag(4) >= 2) THEN
 
 ENDIF
 !****************************************************************************
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! z-boundary 
@@ -559,11 +521,9 @@ ENDIF
 !------------------------------------------------------------------------------------
 
 ! Do the inner boundary
-!$ACC PARALLEL DEFAULT(PRESENT)
 !****************************************************************************
 IF(boundary_flag(5) == 0) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 1, NGHOST
     DO k = 1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -577,7 +537,6 @@ IF(boundary_flag(5) == 0) THEN
 
 ELSEIF(boundary_flag(5) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 1, NGHOST
     DO k = 1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -591,7 +550,6 @@ ELSEIF(boundary_flag(5) == 1) THEN
 
 ELSEIF(boundary_flag(5) >= 2) THEN  
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 1, NGHOST
     DO k = 1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -609,7 +567,6 @@ ENDIF
 ! Do the outer boundary
 IF(boundary_flag(6) == 0) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 1, NGHOST
     DO k = 1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -623,7 +580,6 @@ IF(boundary_flag(6) == 0) THEN
 
 ELSEIF(boundary_flag(6) == 1) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 1, NGHOST
     DO k = 1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -637,7 +593,6 @@ ELSEIF(boundary_flag(6) == 1) THEN
 
 ELSEIF(boundary_flag(6) >= 2) THEN
 
-  !$ACC LOOP GANG WORKER VECTOR COLLAPSE(3)
   DO l = 1, NGHOST
     DO k = 1 - NGHOST, NY + NGHOST
       DO j = 1 - NGHOST, NX + NGHOST
@@ -651,7 +606,6 @@ ELSEIF(boundary_flag(6) >= 2) THEN
 
 ENDIF
 !****************************************************************************
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

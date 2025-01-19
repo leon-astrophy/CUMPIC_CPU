@@ -26,7 +26,7 @@ SAVE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Number of CPUs along the first dimension
-INTEGER, PARAMETER :: NXCPU = 1
+INTEGER, PARAMETER :: NXCPU = 2
 
 ! Number of CPUs along the second dimension
 INTEGER, PARAMETER :: NYCPU = 1
@@ -170,7 +170,7 @@ INTEGER, PARAMETER :: PPMC = 4
 INTEGER, PARAMETER :: WENO = 5
 
 ! Define reconstruction method #
-INTEGER, PARAMETER :: RECON = PPMC
+INTEGER, PARAMETER :: RECON = TVDMC
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for rk3 time evolution 
@@ -334,23 +334,6 @@ INTEGER, DIMENSION(0:2,0:2,0:2) :: neighbors
 integer :: error
 integer(HID_T) :: file_id, dset_id, plist_id, space_id, mem_id
 
-!****************************************************************************************************!
-
-! Section for GPU !
-#ifdef GPU
-!$ACC declare create(no_of_eq)
-!$ACC declare create(imin, imax) 
-!$ACC declare create(irho, itau)
-!$ACC declare create(ivx, ivy, ivz)
-!$ACC declare create(ibx, iby, ibz)
-!$ACC declare create(xF, yF, zF)
-!$ACC declare create(bcell, prim, sc)
-!$ACC declare create(primL, primR, flux)
-!$ACC declare create(consL, consR, eps)
-!$ACC declare create(prim, cons, bcell)
-!$ACC declare create(fluxL, fluxR)
-#endif
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 contains
 
@@ -360,7 +343,6 @@ contains
 
 	! dot product between two vectors !
 	REAL*8 function dot_product(vec_a, vec_b)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8, DIMENSION (1:3) :: vec_a, vec_b
 	dot_product = vec_a(1)*vec_b(1) + vec_a(2)*vec_b(2) + vec_a(3)*vec_b(3)
@@ -371,28 +353,24 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	REAL*8 function compute_hll(ul,ur,fl,fr,sl,sr)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: ul, ur, fl, fr, sl, sr
 	compute_hll = (sr*ur - sl*ul - (fr - fl))/(sr - sl)
 	end function
 	
 	REAL*8 function compute_fluxhll(yl,yr,xl,xr,sl,sr)	
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: yl, yr, xl, xr, sl, sr
 	compute_fluxhll = (sr*yl-sl*yr+sl*sr*(xr-xl))/(sr-sl)
 	end function
 	
 	REAL*8 function compute_roe(xl,xr,rhol,rhor)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: xl,xr,rhol,rhor
 	compute_roe = (DSQRT(rhol)*xl + DSQRT(rhor)*xr)/(DSQRT(rhol) + DSQRT(rhor))
 	end function
 	
 	REAL*8 function compute_signalspeed(cs, bn, bt1, bt2, rho)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: cs, bn, bt1, bt2, rho
 	REAL*8 :: a2_mhd, b2_mhd, a4_mhd, b4_mhd

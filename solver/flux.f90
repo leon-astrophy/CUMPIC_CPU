@@ -5,8 +5,6 @@
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE P_to_flux(dir_in, j_in, k_in, l_in)
-!$ACC ROUTINE (Ptof_MHD) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION 
 IMPLICIT NONE
 
@@ -32,7 +30,6 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE Ptof_MHD(dir_in, j_in, k_in, l_in)
-!$ACC ROUTINE SEQ
 USE DEFINITION 
 IMPLICIT NONE
 

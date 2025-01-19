@@ -3,7 +3,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! 
 ! CUMPIC3D - three-dimensional, newtonian hydrodynamic code 
-! Fully parallized by MPI, support multi-GPU computing
+! Fully parallized by MPI, support hybrid MPI-OPENMP
 ! Written by Leung Shing Chi in 2016, major update by H.S. Leon Chan
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -74,13 +74,6 @@ END IF
   stops(3) = starts(3) + nz
 #endif
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! Section for GPU !
-
-#ifdef GPU
-CALL ASSIGN_DEVICE
-#endif
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Initial settings !
 
@@ -91,13 +84,6 @@ global_time = 0.0D0
 
 ! setup initial conditions !
 CALL initial_model
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! Section for GPU !
-
-#ifdef GPU
-CALL POPULATE_DEVICE
-#endif
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

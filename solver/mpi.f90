@@ -47,6 +47,7 @@ call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_size, ierror)
 numcpus = NXCPU*NYCPU*NZCPU
 IF(mpi_size .ne. numcpus) THEN
   IF(mpi_rank == 0) THEN
+    write (*,*) mpi_size, numcpus
     write (*,*) 'Error, the number of MPI processes called is not equal to the total number of CPU requested'
   END IF
   STOP
@@ -257,7 +258,6 @@ USE DEFINITION
 IMPLICIT NONE
 include "mpif.h"
 
-!$acc host_data use_device(prim, bcell)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Send my last NG cell to my right neighbour's ghost cell !
@@ -289,7 +289,6 @@ CALL MPI_Sendrecv(bcell(ibx,1,1,1), 1, bcell_type(3), neighbors(1,1,0), 0, &
                   new_comm, MPI_STATUS_IGNORE, ierror)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!$acc end host_data
 
 END SUBROUTINE
 
@@ -305,7 +304,6 @@ USE DEFINITION
 IMPLICIT NONE
 include "mpif.h"
 
-!$acc host_data use_device(prim, bcell)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Send my last NG cell to my right neighbour's ghost cell !
@@ -337,7 +335,6 @@ CALL MPI_Sendrecv(bcell(ibx,-2,1,1), 1, bcell_type(2), neighbors(1,0,1), 0, &
                   new_comm, MPI_STATUS_IGNORE, ierror)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!$acc end host_data
 
 END SUBROUTINE
 
@@ -353,7 +350,6 @@ USE DEFINITION
 IMPLICIT NONE
 include "mpif.h"
 
-!$acc host_data use_device(prim, bcell)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Send my last NG cell to my right neighbour's ghost cell !
@@ -385,7 +381,6 @@ CALL MPI_Sendrecv(bcell(ibx,-2,-2,1), 1, bcell_type(1), neighbors(0,1,1), 0, &
                   new_comm, MPI_STATUS_IGNORE, ierror)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!$acc end host_data
 
 END SUBROUTINE
 
@@ -405,7 +400,6 @@ include "mpif.h"
 ! Input/Output array
 REAL*8, INTENT (IN), DIMENSION (1-NGHOST:NX+3,1-NGHOST:NY+3,1-NGHOST:NZ+3) :: array
 
-!$acc host_data use_device(array)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Send my last NG cell to my right neighbour's ghost cell !
@@ -422,7 +416,6 @@ CALL MPI_Sendrecv(array(1,1,1), 1, scalar_type(3), neighbors(1,1,0), 0, &
                   new_comm, MPI_STATUS_IGNORE, ierror)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!$acc end host_data
 
 END SUBROUTINE
 
@@ -442,7 +435,6 @@ include "mpif.h"
 ! Input/Output array
 REAL*8, INTENT (IN), DIMENSION (1-NGHOST:NX+3,1-NGHOST:NY+3,1-NGHOST:NZ+3) :: array
 
-!$acc host_data use_device(array)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Send my last NG cell to my right neighbour's ghost cell !
@@ -459,7 +451,6 @@ CALL MPI_Sendrecv(array(-2,1,1), 1, scalar_type(2), neighbors(1,2,1), 0, &
                   new_comm, MPI_STATUS_IGNORE, ierror)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!$acc end host_data
 
 END SUBROUTINE
 
@@ -479,7 +470,6 @@ include "mpif.h"
 ! Input/Output array
 REAL*8, INTENT (IN), DIMENSION (1-NGHOST:NX+3,1-NGHOST:NY+3,1-NGHOST:NZ+3) :: array
 
-!$acc host_data use_device(array)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Send my last NG cell to my right neighbour's ghost cell !
@@ -496,7 +486,6 @@ CALL MPI_Sendrecv(array(-2,-2,1), 1, scalar_type(1), neighbors(2,1,1), 0, &
                   new_comm, MPI_STATUS_IGNORE, ierror)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!$acc end host_data
                   
 END SUBROUTINE
 

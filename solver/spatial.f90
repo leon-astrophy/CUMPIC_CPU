@@ -19,7 +19,6 @@ INTEGER :: i,j,k,l
 ! First, initialize !
 
 ! Initialize source term and rungekutta operator !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) 
 DO l = 0, nz
 	DO k = 0, ny
 		DO j = 0, nx
@@ -30,10 +29,8 @@ DO l = 0, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Initialize electric field !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) 
 DO l = 0, nz
 	DO k = 0, ny
 		DO j = 0, nx
@@ -43,7 +40,6 @@ DO l = 0, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 !---------------------------------------------------------------------------------------------!
 ! Find source term !
@@ -73,7 +69,6 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE GET_SOURCE
-!$ACC ROUTINE (GEOM_SOURCE) SEQ
 USE DEFINITION 
 IMPLICIT NONE
 
@@ -82,7 +77,6 @@ INTEGER :: i, j, k, l
 
 ! Geometric sources terms
 !-----------------------------------------------------------------------------------!
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) 
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -95,7 +89,6 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -111,9 +104,6 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE GET_FLUXES
-!$ACC ROUTINE (GEOM_FLUX) SEQ
-!$ACC ROUTINE (INTERPOLATE) SEQ
-!$ACC ROUTINE (RIEMANN) SEQ
 USE DEFINITION 
 IMPLICIT NONE
 
@@ -128,7 +118,6 @@ REAL*8 :: geom_flux_p, geom_flux_c, geom_flux_m
 ! First loop through the x-direction
 !--------------------------------------------------------------------------------------------------------------!
 ! Interpolate to get L/R state !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -151,10 +140,8 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Then solve the Riemann Problem !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx
@@ -165,10 +152,8 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Add the flux difference into the l-operator
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -184,10 +169,8 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Now do the same for the electric field, using flux-CT scheme 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -200,13 +183,11 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 !==============================================================================================================!
 
 ! Then loop through the y-direction
 !--------------------------------------------------------------------------------------------------------------!
 ! Interpolate to get L/R state !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -229,10 +210,8 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Then solve the Riemann Problem !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz + 1 
 	DO k = 0, ny 
 		DO j = 0, nx + 1
@@ -243,10 +222,8 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Add the flux difference into the l-operator
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -262,10 +239,8 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Now do the same for the electric field, using flux-CT scheme 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -278,13 +253,11 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 !==============================================================================================================!
 
 ! Finally loop through the z-direction
 !--------------------------------------------------------------------------------------------------------------!
 ! Interpolate to get L/R state !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -307,10 +280,8 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Then solve the Riemann Problem !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 0, nz 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -321,10 +292,8 @@ DO l = 0, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Add the flux difference into the l-operator
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -340,10 +309,8 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 
 ! Now do the same for the electric field, using flux-CT scheme 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -356,13 +323,11 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 !--------------------------------------------------------------------------------------------------------------!
 
 ! At the end, add source terms !
 !--------------------------------------------------------------------------------------------------------------!
 ! Final step, get rungekutta operator, LHS of the hydro equation !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -372,7 +337,6 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
 !==============================================================================================================!
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

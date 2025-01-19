@@ -61,7 +61,6 @@ INTEGER :: i, j, k, l
   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -69,7 +68,6 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

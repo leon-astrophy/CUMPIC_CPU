@@ -10,7 +10,6 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE UPDATE (p_in)
-!$ACC ROUTINE (EOS_PRESSURE) SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -24,7 +23,7 @@ INTEGER :: i, j, k, l
 ! Updates to hydrodynamic variables !
 
 ! Find pressure !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP PARALLEL DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 1 - NGHOST, nz + NGHOST
   DO k = 1 - NGHOST, ny + NGHOST
     DO j = 1 - NGHOST, nx + NGHOST
@@ -32,7 +31,7 @@ DO l = 1 - NGHOST, nz + NGHOST
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Custom updates !

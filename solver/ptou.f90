@@ -5,8 +5,6 @@
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE P_to_U(j_in, k_in, l_in)
-!$acc routine (PtoU_MHD) seq
-!$acc routine seq
 USE DEFINITION
 IMPLICIT NONE
 
@@ -31,7 +29,6 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE PtoU_MHD(j_in, k_in, l_in)
-!$acc routine seq
 USE DEFINITION
 IMPLICIT NONE
 

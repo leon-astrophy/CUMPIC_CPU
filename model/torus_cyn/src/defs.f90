@@ -53,12 +53,4 @@ REAL*8 :: eps_floor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-! Section for GPU !
-#ifdef GPU
-!$ACC declare create(rho_floor)
-!$ACC declare create(eps_floor)
-#endif
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 END MODULE PARAMETER
