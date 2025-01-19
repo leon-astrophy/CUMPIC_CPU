@@ -13,6 +13,7 @@
 !
 !***********************************************************************
 SUBROUTINE find_divb
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
@@ -39,7 +40,7 @@ REAL*8 :: azm
 ! Check divergence-B = 0 constraint !
 maxdb = 0.0d0
 
-!$OMP PARALLEL DO COLLAPSE(3) SCHEDULE(STATIC) REDUCTION(max:maxdb) PRIVATE(axp,axm,ayp,aym,azp,azm)
+!$OMP PARALLEL DO COLLAPSE(3) SCHEDULE(STATIC) REDUCTION(max:maxdb) PRIVATE(div_b,axp,axm,ayp,aym,azp,azm)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -74,6 +75,7 @@ END SUBROUTINE
 !***********************************************************************
 SUBROUTINE flux_ct
 USE DEFINITION
+USE OMP_LIB
 IMPLICIT NONE
 
 ! Integer !
@@ -90,9 +92,13 @@ REAL*8 :: g_by_ez_m, g_by_ez_c, g_by_ez_p
 REAL*8 :: g_bz_ex_m, g_bz_ex_c, g_bz_ex_p
 REAL*8 :: g_bz_ey_m, g_bz_ey_c, g_bz_ey_p
 
+!$OMP PARALLEL PRIVATE(g_bx_ez_m, g_bx_ez_c, g_bx_ez_p, g_bx_ey_m, g_bx_ey_c, g_bx_ey_p, &
+!$OMP g_by_ex_m, g_by_ex_c, g_by_ex_p, g_by_ez_m, g_by_ez_c, g_by_ez_p, &
+!$OMP g_bz_ex_m, g_bz_ex_c, g_bz_ex_p, g_bz_ey_m, g_bz_ey_c, g_bz_ey_p)
 !---------------------------------------------------------------------------------------------------------!
 
 ! Find cell-centered electric fields !
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz + 1
   DO k = 0, ny + 1
     DO j = 0, nx + 1
@@ -102,10 +108,12 @@ DO l = 0, nz + 1
     END DO
   END DO
 END DO
+!$OMP END DO
 
 !---------------------------------------------------------------------------------------------------------!
 
 ! upwind constrained transport !
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -120,10 +128,12 @@ DO l = 0, nz
     END DO
   END DO
 END DO
+!$OMP END DO
 
 !---------------------------------------------------------------------------------------------------------!
 
 ! Update rungekutta operator !
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -144,8 +154,10 @@ DO l = 0, nz
     END DO
   END DO
 END DO
+!$OMP END DO
 
 !---------------------------------------------------------------------------------------------------------!
+!$OMP END PARALLEL
 
 END SUBROUTINE
 

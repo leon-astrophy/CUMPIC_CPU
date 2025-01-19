@@ -9,16 +9,19 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 PROGRAM CUMC3D
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
-
-integer :: n, j, k, l
-real*8 :: x_loc, y_loc, z_loc, dx_loc, dy_loc, dz_loc, div_b, maxdb
 
 ! Include MPI only if MPI is used !
 #ifdef MPI
 include "mpif.h" 
 #endif
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! Integer !
+integer :: n, j, k, l
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! MPI initialization
@@ -47,6 +50,17 @@ IF(mpi_rank == 0) THEN
   WRITE(*,*) '-----------------------------------------'
   WRITE(*,*)
 END IF
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+#ifdef OMP
+IF(mpi_rank == 0) THEN 
+  !$OMP PARALLEL
+  Write(*,*) 'OPENMP is used, the number of threads per MPI process is', omp_get_num_threads()
+  Write(*,*)
+  !$OMP END PARALLEL
+END IF
+#endif
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

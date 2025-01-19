@@ -28,6 +28,7 @@ END SUBROUTINE
 
 SUBROUTINE BOUNDARY1D (array, signx_in, signx_out, signy_in, signy_out, signz_in, signz_out)
 USE DEFINITION
+USE OMP_LIB
 IMPLICIT NONE
 
 ! Input/Output array
@@ -365,6 +366,7 @@ END SUBROUTINE boundary1D
 
 SUBROUTINE BOUNDARYP
 USE DEFINITION
+USE OMP_LIB
 IMPLICIT NONE
 
 ! Dummy variables

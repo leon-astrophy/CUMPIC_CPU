@@ -19,19 +19,12 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE FROMRVETOU
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
 ! Dummy variables
 INTEGER :: i, j, k, l
-
-! Real variables, geometric factor !
-REAL*8 :: geom_bcell_x_l
-REAL*8 :: geom_bcell_x_r
-REAL*8 :: geom_bcell_y_l
-REAL*8 :: geom_bcell_y_r
-REAL*8 :: geom_bcell_z_l
-REAL*8 :: geom_bcell_z_r
 
 !$OMP PARALLEL
 !------------------------------------------------------------------------------------------!
@@ -76,19 +69,12 @@ END SUBROUTINE
 ! Convert back to primitive variables !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE FROMUTORVE
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
 ! Dummy variables
 INTEGER :: i, j, k, l
-
-! Real variables, geometric factor !
-REAL*8 :: geom_bcell_x_l
-REAL*8 :: geom_bcell_x_r
-REAL*8 :: geom_bcell_y_l
-REAL*8 :: geom_bcell_y_r
-REAL*8 :: geom_bcell_z_l
-REAL*8 :: geom_bcell_z_r
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! For NM sectors !

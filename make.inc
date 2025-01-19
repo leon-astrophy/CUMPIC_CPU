@@ -15,7 +15,7 @@ F90 = h5pfc
 #PARALLEL = -DMPI
 
 # use OPENMP? #
-MULTICORE = -fopenmp
+MULTICORE = -fopenmp -DOMP
 
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 # section for math packages #
