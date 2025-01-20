@@ -9,6 +9,21 @@ IMPLICIT NONE
 SAVE
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Grid parameters !
+
+! Inner radial boundary !
+REAL*8, PARAMETER :: Rin = 3.0d0
+
+! Outer radial boundary !
+REAL*8, PARAMETER :: Rout = 23.0d0
+
+! Off-set along the pole to avoid singularity !
+REAL*8, PARAMETER :: off_set = 1.0e-6
+
+! Compression along the theta direction !
+REAL*8, PARAMETER :: s_comp = 0.5D0
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! Adiabatic index !
 REAL*8, PARAMETER :: ggas = 5.0d0/3.0d0
@@ -26,10 +41,10 @@ REAL*8, PARAMETER :: r_sh = 2.0
 REAL*8, PARAMETER :: q_grad = 2.0d0
 
 ! inner (equatorial) radius of the torus !
-REAL*8, PARAMETER :: s_in = 21.0d0
+REAL*8, PARAMETER :: s_in = 6.0d0
 
 ! (equatorial) radius where the density is at maximum !
-REAL*8, PARAMETER :: s_max = 40.d0
+REAL*8, PARAMETER :: s_max = 9.4d0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! For the magnetic field setup 

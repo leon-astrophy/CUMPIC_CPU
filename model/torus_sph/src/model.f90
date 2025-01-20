@@ -125,9 +125,10 @@ DO l = 1, nz
         eps(j,k,l) = k_poly*prim(irho,j,k,l)**(ggas - 1.0D0)/(ggas - 1.0D0)        
       END IF
 
-      ! vector potential !
+      ! vector potential, SANE accretion !
       IF(prim(irho,j,k,l) >= rho_cut) THEN
-        A_phi(j,k,l) = (prim(irho,j,k,l)/rho_max)*(x_loc/3.0*DSIN(y_loc))**3*DEXP(-x_loc/400.0d0) - rho_cut
+        !A_phi(j,k,l) = (prim(irho,j,k,l)/rho_max)*(x_loc/3.0*DSIN(y_loc))**3*DEXP(-x_loc/400.0d0) - rho_cut
+        A_phi(j,k,l) = (prim(irho,j,k,l) - rho_cut)/rho_max
       END IF
 
     END DO
@@ -252,7 +253,7 @@ eps_floor = k_poly*rho_floor**(ggas - 1.0)/(ggas - 1.0)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-! perturb the torus !
+! perturb the torus to seed MRI !
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx

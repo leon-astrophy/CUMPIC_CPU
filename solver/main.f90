@@ -53,14 +53,12 @@ END IF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef OMP
 IF(mpi_rank == 0) THEN 
   !$OMP PARALLEL
-  Write(*,*) 'OPENMP is used, the number of threads per MPI process is', omp_get_num_threads()
-  Write(*,*)
+  n = omp_get_num_threads()
   !$OMP END PARALLEL
+  Write(*,*) 'OPENMP is used, the number of threads per MPI process is', n
 END IF
-#endif
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
