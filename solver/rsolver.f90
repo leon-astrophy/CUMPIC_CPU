@@ -10,8 +10,6 @@
 !
 !*******************************************************************
 SUBROUTINE RIEMANN (dir_in, j_in, k_in, l_in)
-!$ACC ROUTINE (HLL_SOLVER) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -41,11 +39,6 @@ END SUBROUTINE
 !			    
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE HLL_SOLVER (dir_in, j_in, k_in, l_in)
-!$ACC ROUTINE (EOS_EPSILON) SEQ
-!$ACC ROUTINE (P_to_U_face) SEQ
-!$ACC ROUTINE (P_to_flux) SEQ
-!$ACC ROUTINE (EOS_SOUNDSPEED) SEQ 
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
   

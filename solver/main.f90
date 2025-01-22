@@ -3,22 +3,25 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! 
 ! CUMPIC3D - three-dimensional, newtonian hydrodynamic code 
-! Fully parallized by MPI, support multi-GPU computing
+! Fully parallized by MPI, support hybrid MPI-OPENMP
 ! Written by Leung Shing Chi in 2016, major update by H.S. Leon Chan
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 PROGRAM CUMC3D
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
-
-integer :: n, j, k, l
-real*8 :: x_loc, y_loc, z_loc, dx_loc, dy_loc, dz_loc, div_b, maxdb
 
 ! Include MPI only if MPI is used !
 #ifdef MPI
 include "mpif.h" 
 #endif
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! Integer !
+integer :: n, j, k, l
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! MPI initialization
@@ -50,6 +53,15 @@ END IF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+IF(mpi_rank == 0) THEN 
+  !$OMP PARALLEL
+  n = omp_get_num_threads()
+  !$OMP END PARALLEL
+  Write(*,*) 'OPENMP is used, the number of threads per MPI process is', n
+END IF
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 ! Setup the number of equations !
 IF(mpi_rank == 0) THEN 
   WRITE(*,*) 'Build hydro equations'
@@ -74,13 +86,6 @@ END IF
   stops(3) = starts(3) + nz
 #endif
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! Section for GPU !
-
-#ifdef GPU
-CALL ASSIGN_DEVICE
-#endif
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Initial settings !
 
@@ -91,13 +96,6 @@ global_time = 0.0D0
 
 ! setup initial conditions !
 CALL initial_model
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! Section for GPU !
-
-#ifdef GPU
-CALL POPULATE_DEVICE
-#endif
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

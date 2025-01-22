@@ -5,8 +5,6 @@
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE U_to_P(j_in, k_in, l_in)
-!$acc routine (UtoP_MHD) seq 
-!$acc routine seq
 USE DEFINITION
 IMPLICIT NONE
 
@@ -31,7 +29,6 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE UtoP_MHD(j_in, k_in, l_in)
-!$acc routine seq
 USE DEFINITION
 IMPLICIT NONE
 

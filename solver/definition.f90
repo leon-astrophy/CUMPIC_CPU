@@ -87,19 +87,19 @@ INTEGER, PARAMETER :: coordinate = spherical
 INTEGER, PARAMETER :: boundary_flag(6) = (/1,1,3,3,0,0/)
 
 ! Starting position of the grid !
-REAL*8, PARAMETER :: x_start = 3.0d0
-REAL*8, PARAMETER :: y_start = 0.02d0
+REAL*8, PARAMETER :: x_start = 0.0d0
+REAL*8, PARAMETER :: y_start = 0.0d0
 REAL*8, PARAMETER :: z_start = 0.0d0
 
 ! Ending position of the grid !
-REAL*8, PARAMETER :: x_end = 500.0d0
-REAL*8, PARAMETER :: y_end = pi - 0.02d0
-REAL*8, PARAMETER :: z_end = 2.0d0*pi
+REAL*8, PARAMETER :: x_end = 0.0d0
+REAL*8, PARAMETER :: y_end = 1.0d0
+REAL*8, PARAMETER :: z_end = 1.0d0
 
 ! The total number of grid in the x, y, z direction
 INTEGER, PARAMETER :: nxtot = 128
-INTEGER, PARAMETER :: nytot = 126
-INTEGER, PARAMETER :: nztot = 124
+INTEGER, PARAMETER :: nytot = 64
+INTEGER, PARAMETER :: nztot = 32
 
 ! Grid sizes for uniform grid 
 REAL*8, PARAMETER :: dx = (x_end - x_start)/DBLE(nxtot)	
@@ -113,10 +113,10 @@ INTEGER, PARAMETER :: nz = nztot/NZCPU
 
 ! Cournat-Friedrich-Levy constant
 ! Defined as dt = cfl * dx / MAX(vel + cs)
-REAL*8, PARAMETER :: cfl = 0.70D0			
+REAL*8, PARAMETER :: cfl = 0.80D0			
 
 ! Maximum time to be simulated in the model
-REAL*8, PARAMETER :: total_time = 10000.0d0
+REAL*8, PARAMETER :: total_time = 100.0d0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for Output setting
@@ -129,7 +129,7 @@ REAL*8, PARAMETER :: output_logtime = 100.0d0
 
 ! Physical time interval for each hydro profile
 REAL*8 :: output_profiletime_last = 0.0D0
-REAL*8, PARAMETER :: output_profiletime = 100.0d0     
+REAL*8, PARAMETER :: output_profiletime = 1.0d0    
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for riemann solvers
@@ -170,7 +170,7 @@ INTEGER, PARAMETER :: PPMC = 4
 INTEGER, PARAMETER :: WENO = 5
 
 ! Define reconstruction method #
-INTEGER, PARAMETER :: RECON = PPMC
+INTEGER, PARAMETER :: RECON = TVDMM
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for rk3 time evolution 
@@ -334,23 +334,6 @@ INTEGER, DIMENSION(0:2,0:2,0:2) :: neighbors
 integer :: error
 integer(HID_T) :: file_id, dset_id, plist_id, space_id, mem_id
 
-!****************************************************************************************************!
-
-! Section for GPU !
-#ifdef GPU
-!$ACC declare create(no_of_eq)
-!$ACC declare create(imin, imax) 
-!$ACC declare create(irho, itau)
-!$ACC declare create(ivx, ivy, ivz)
-!$ACC declare create(ibx, iby, ibz)
-!$ACC declare create(xF, yF, zF)
-!$ACC declare create(bcell, prim, sc)
-!$ACC declare create(primL, primR, flux)
-!$ACC declare create(consL, consR, eps)
-!$ACC declare create(prim, cons, bcell)
-!$ACC declare create(fluxL, fluxR)
-#endif
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 contains
 
@@ -360,7 +343,6 @@ contains
 
 	! dot product between two vectors !
 	REAL*8 function dot_product(vec_a, vec_b)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8, DIMENSION (1:3) :: vec_a, vec_b
 	dot_product = vec_a(1)*vec_b(1) + vec_a(2)*vec_b(2) + vec_a(3)*vec_b(3)
@@ -371,28 +353,24 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	REAL*8 function compute_hll(ul,ur,fl,fr,sl,sr)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: ul, ur, fl, fr, sl, sr
 	compute_hll = (sr*ur - sl*ul - (fr - fl))/(sr - sl)
 	end function
 	
 	REAL*8 function compute_fluxhll(yl,yr,xl,xr,sl,sr)	
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: yl, yr, xl, xr, sl, sr
 	compute_fluxhll = (sr*yl-sl*yr+sl*sr*(xr-xl))/(sr-sl)
 	end function
 	
 	REAL*8 function compute_roe(xl,xr,rhol,rhor)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: xl,xr,rhol,rhor
 	compute_roe = (DSQRT(rhol)*xl + DSQRT(rhor)*xr)/(DSQRT(rhol) + DSQRT(rhor))
 	end function
 	
 	REAL*8 function compute_signalspeed(cs, bn, bt1, bt2, rho)
-	!$ACC ROUTINE SEQ
 	implicit none
 	REAL*8 :: cs, bn, bt1, bt2, rho
 	REAL*8 :: a2_mhd, b2_mhd, a4_mhd, b4_mhd

@@ -9,17 +9,19 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE SPATIAL
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
 ! Integer !
 INTEGER :: i,j,k,l
 
+!$OMP PARALLEL
 !---------------------------------------------------------------------------------------------!
 ! First, initialize !
 
 ! Initialize source term and rungekutta operator !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) 
+!$OMP DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 0, nz
 	DO k = 0, ny
 		DO j = 0, nx
@@ -30,10 +32,10 @@ DO l = 0, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Initialize electric field !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) 
+!$OMP DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 0, nz
 	DO k = 0, ny
 		DO j = 0, nx
@@ -43,10 +45,10 @@ DO l = 0, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 !---------------------------------------------------------------------------------------------!
-! Find source term !
+!$OMP END PARALLEL
 
 ! Predefined source term !
 CALL GET_SOURCE
@@ -73,7 +75,7 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE GET_SOURCE
-!$ACC ROUTINE (GEOM_SOURCE) SEQ
+USE OMP_LIB
 USE DEFINITION 
 IMPLICIT NONE
 
@@ -81,21 +83,20 @@ IMPLICIT NONE
 INTEGER :: i, j, k, l
 
 ! Geometric sources terms
+!$OMP PARALLEL DO COLLAPSE(3) SCHEDULE(STATIC)
 !-----------------------------------------------------------------------------------!
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) 
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
-			DO i = imin, imax
 				
-				! Call warpper for computing geometric sources !
-				CALL GEOM_SOURCE(j, k, l)
+			! Call warpper for computing geometric sources !
+			CALL GEOM_SOURCE(j, k, l)
 
-			END DO
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!-----------------------------------------------------------------------------------!
+!$OMP END PARALLEL DO
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -111,9 +112,7 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE GET_FLUXES
-!$ACC ROUTINE (GEOM_FLUX) SEQ
-!$ACC ROUTINE (INTERPOLATE) SEQ
-!$ACC ROUTINE (RIEMANN) SEQ
+USE OMP_LIB
 USE DEFINITION 
 IMPLICIT NONE
 
@@ -123,12 +122,13 @@ INTEGER :: i, j, k, l
 ! Geometric factor !
 REAL*8 :: geom_flux_p, geom_flux_c, geom_flux_m
 
+!$OMP PARALLEL PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
 !==============================================================================================================!
 
 ! First loop through the x-direction
 !--------------------------------------------------------------------------------------------------------------!
 ! Interpolate to get L/R state !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -151,10 +151,10 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Then solve the Riemann Problem !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx
@@ -165,10 +165,10 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Add the flux difference into the l-operator
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
+!$OMP DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -184,10 +184,10 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Now do the same for the electric field, using flux-CT scheme 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -200,13 +200,14 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
+
 !==============================================================================================================!
 
 ! Then loop through the y-direction
 !--------------------------------------------------------------------------------------------------------------!
 ! Interpolate to get L/R state !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -229,10 +230,10 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Then solve the Riemann Problem !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz + 1 
 	DO k = 0, ny 
 		DO j = 0, nx + 1
@@ -243,10 +244,10 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Add the flux difference into the l-operator
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
+!$OMP DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -262,10 +263,10 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Now do the same for the electric field, using flux-CT scheme 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -278,13 +279,14 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
+
 !==============================================================================================================!
 
 ! Finally loop through the z-direction
 !--------------------------------------------------------------------------------------------------------------!
 ! Interpolate to get L/R state !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz + 1 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -307,10 +309,10 @@ DO l = 0, nz + 1
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Then solve the Riemann Problem !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz 
 	DO k = 0, ny + 1
 		DO j = 0, nx + 1
@@ -321,10 +323,10 @@ DO l = 0, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Add the flux difference into the l-operator
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT) PRIVATE(geom_flux_p, geom_flux_c, geom_flux_m)
+!$OMP DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -340,10 +342,10 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 ! Now do the same for the electric field, using flux-CT scheme 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) 
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -356,13 +358,14 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
+
 !--------------------------------------------------------------------------------------------------------------!
 
 ! At the end, add source terms !
 !--------------------------------------------------------------------------------------------------------------!
 ! Final step, get rungekutta operator, LHS of the hydro equation !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT)
+!$OMP DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 1, nz
 	DO k = 1, ny
 		DO j = 1, nx
@@ -372,8 +375,9 @@ DO l = 1, nz
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 !==============================================================================================================!
+!$OMP END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

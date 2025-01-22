@@ -5,7 +5,6 @@
 ! with subroutine GETRHOEOSRTOP                                      !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE EOS_PRESSURE (j_in, k_in, l_in, rho_in, eps_in, p_out)
-!$ACC ROUTINE SEQ
 USE DEFINITION
 USE PARAMETER
 IMPLICIT NONE
@@ -32,7 +31,6 @@ END SUBROUTINE
 ! This subroutine finds the speed of sound !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE EOS_SOUNDSPEED (p_in, rho_in, eps_in, cs_out)
-!$ACC ROUTINE SEQ
 USE DEFINITION
 USE PARAMETER
 IMPLICIT NONE
@@ -58,7 +56,6 @@ END SUBROUTINE
 ! This subroutine finds the specific internal energy !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE EOS_EPSILON (p_in, rho_in, eps_out)
-!$ACC ROUTINE SEQ
 USE DEFINITION
 USE PARAMETER
 IMPLICIT NONE

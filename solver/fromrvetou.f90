@@ -19,25 +19,18 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE FROMRVETOU
-!$ACC ROUTINE (P_to_U) SEQ
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
 ! Dummy variables
 INTEGER :: i, j, k, l
 
-! Real variables, geometric factor !
-REAL*8 :: geom_bcell_x_l
-REAL*8 :: geom_bcell_x_r
-REAL*8 :: geom_bcell_y_l
-REAL*8 :: geom_bcell_y_r
-REAL*8 :: geom_bcell_z_l
-REAL*8 :: geom_bcell_z_r
-
+!$OMP PARALLEL
 !------------------------------------------------------------------------------------------!
 ! Get cell centered magnetic field !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -47,12 +40,12 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO 
 
 !------------------------------------------------------------------------------------------!
 ! Convert primitive to conservative !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -63,7 +56,10 @@ DO l = 0, nz
 	  END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO 
+
+!------------------------------------------------------------------------------------------!
+!$OMP END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -73,28 +69,21 @@ END SUBROUTINE
 ! Convert back to primitive variables !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE FROMUTORVE
-!$ACC ROUTINE (U_to_P) SEQ
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
 ! Dummy variables
 INTEGER :: i, j, k, l
 
-! Real variables, geometric factor !
-REAL*8 :: geom_bcell_x_l
-REAL*8 :: geom_bcell_x_r
-REAL*8 :: geom_bcell_y_l
-REAL*8 :: geom_bcell_y_r
-REAL*8 :: geom_bcell_z_l
-REAL*8 :: geom_bcell_z_r
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! For NM sectors !
 
+!$OMP PARALLEL
 !------------------------------------------------------------------------------------------!
 ! Get cell centered magnetic field !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -104,12 +93,12 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Do the rest conversation !
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(present)
+!$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
@@ -120,7 +109,10 @@ DO l = 0, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END DO
+
+!------------------------------------------------------------------------------------------!
+!$OMP END PARALLEL
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

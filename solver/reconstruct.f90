@@ -16,9 +16,6 @@
 !
 !*******************************************************************
 SUBROUTINE INTERPOLATE (dir_in, j_in, k_in, l_in, vm2, vm1, vc, vp1, vp2, vm_out, vp_out)
-!$ACC ROUTINE (TVD_MM) SEQ
-!$ACC ROUTINE (PPMC) SEQ  
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -56,8 +53,6 @@ END SUBROUTINE
 !
 !*******************************************************************
 SUBROUTINE TVD_MM (dir_in, j_in, k_in, l_in, vm2, vm1, vc, vp1, vp2, vm_out, vp_out)
-!$ACC ROUTINE (coord_dx) SEQ
-!$ACC ROUTINE SEQ
 USE DEFINITION
 IMPLICIT NONE
 
@@ -135,8 +130,6 @@ END SUBROUTINE
 !
 !*******************************************************************
 SUBROUTINE PPM (dir_in, j_in, k_in, l_in, vm2, vm1, vc, vp1, vp2, vm_out, vp_out)
-!$ACC ROUTINE (coord_dx) SEQ
-!$ACC ROUTINE SEQ 
 USE DEFINITION
 IMPLICIT NONE
   

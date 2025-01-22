@@ -5,8 +5,6 @@
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE P_to_U_face(j_in, k_in, l_in, epsL_in, epsR_in)
-!$acc routine (PtoU_MHD_face) seq
-!$acc routine seq
 USE DEFINITION
 IMPLICIT NONE
 
@@ -32,7 +30,6 @@ END SUBROUTINE
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE PtoU_MHD_face(j_in, k_in, l_in, epsL_in, epsR_in)
-!$acc routine seq
 USE DEFINITION
 IMPLICIT NONE
 

@@ -17,4 +17,3 @@
 ./solver/ptou.f90
 ./solver/ptou_face.f90
 ./solver/utop.f90
-./solver/openacc.f90

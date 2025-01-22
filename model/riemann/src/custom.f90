@@ -52,6 +52,7 @@ END SUBROUTINE
 ! Custom variable floor !
 !!!!!!!!!!!!!!!!!!!!!!!!!
 SUBROUTINE CUSTOM_CHECKRHO
+USE OMP_LIB
 USE DEFINITION
 USE PARAMETER
 IMPLICIT NONE
@@ -61,7 +62,7 @@ INTEGER :: i, j, k, l
   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT)
+!$OMP PARALLEL DO COLLAPSE(3) SCHEDULE(STATIC)
 DO l = 1, nz
   DO k = 1, ny
     DO j = 1, nx
@@ -69,7 +70,7 @@ DO l = 1, nz
     END DO
   END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -23,7 +23,7 @@ INTEGER, PARAMETER :: mhd_rotor = 3
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Which test model? 
-INTEGER, PARAMETER :: riemann_test = mhd_rotor
+INTEGER, PARAMETER :: riemann_test = toro_1
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

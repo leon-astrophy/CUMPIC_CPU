@@ -10,6 +10,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE RUNGEKUTTA
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
@@ -19,7 +20,7 @@ INTEGER :: i, j, k, l
 !---------------------------------------------------------------------------------------------!     
 
 ! Backup old arrays !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT)
+!$OMP PARALLEL DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 0, NZ
   DO k = 0, NY
     DO j = 0, NX
@@ -29,7 +30,7 @@ DO l = 0, NZ
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 !---------------------------------------------------------------------------------------------!
 ! 1st iteration
@@ -38,7 +39,7 @@ END DO
 CALL SPATIAL
 
 ! NM sector !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT)
+!$OMP PARALLEL DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 0, NZ
   DO k = 0, NY
     DO j = 0, NX
@@ -48,7 +49,7 @@ DO l = 0, NZ
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 ! Convert from conservative to primitive
 CALL FROMUTORVE
@@ -72,7 +73,7 @@ CALL UPDATE (1)
 CALL SPATIAL
 
 ! NM sector !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT)
+!$OMP PARALLEL DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 0, NZ
   DO k = 0, NY
     DO j = 0, NX
@@ -82,7 +83,7 @@ DO l = 0, NZ
 		END DO
 	END DO
 END DO
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 ! Convert from conservative to primitive
 CALL FROMUTORVE
@@ -106,7 +107,7 @@ CALL UPDATE (2)
 CALL SPATIAL
 
 ! NM sector !
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(4) DEFAULT(PRESENT)
+!$OMP PARALLEL DO COLLAPSE(4) SCHEDULE(STATIC)
 DO l = 0, NZ
   DO k = 0, NY
     DO j = 0, NX
@@ -116,7 +117,7 @@ DO l = 0, NZ
 		END DO
 	END DO
 END DO 
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 ! Convert from conservative to primitive
 CALL FROMUTORVE 
@@ -159,9 +160,7 @@ END SUBROUTINE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 SUBROUTINE finddt
-!$ACC ROUTINE (EOS_SOUNDSPEED) SEQ
-!$ACC ROUTINE (GET_COORD) SEQ
-!$ACC ROUTINE (coord_dx) SEQ
+USE OMP_LIB
 USE DEFINITION
 IMPLICIT NONE
 
@@ -202,10 +201,11 @@ REAL*8 :: geom_length_z
 dt_temp = 1.0d10
 
 ! Now we find the minimum time constrained by NM sector
-!$ACC PARALLEL LOOP GANG WORKER VECTOR COLLAPSE(3) DEFAULT(PRESENT) &
-!$ACC PRIVATE(cs_loc, a2_mhd, b2_mhd, a4_mhd, b4_mhd, b2x_mhd, b2y_mhd, b2z_mhd, & 
-!$ACC cfx_mhd, cfy_mhd, cfz_mhd, lambda, lambda1, lambda2, lambda3, &
-!$ACC dx_loc, dy_loc, dz_loc, geom_length_x, geom_length_y, geom_length_z) REDUCTION(MIN:dt_temp)
+!$OMP PARALLEL DO COLLAPSE(3) SCHEDULE(STATIC) & 
+!$OMP PRIVATE(cs_loc, a2_mhd, b2_mhd, a4_mhd, b4_mhd, b2x_mhd, b2y_mhd, b2z_mhd, &
+!$OMP cfx_mhd, cfy_mhd, cfz_mhd, lambda, lambda1, lambda2, lambda3, x_loc, y_loc, z_loc, &
+!$OMP dx_loc, dy_loc, dz_loc, dt_out, geom_length_x, geom_length_y ,geom_length_z) &
+!$OMP REDUCTION(MIN:dt_temp)
 DO l = 1, NZ
 	DO k = 1, NY
 		DO j = 1, NX
@@ -249,7 +249,7 @@ DO l = 1, NZ
 		END DO
 	ENDDO
 ENDDO
-!$ACC END PARALLEL
+!$OMP END PARALLEL DO
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
