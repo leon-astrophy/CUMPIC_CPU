@@ -173,11 +173,12 @@ IMPLICIT NONE
 INTEGER, INTENT(IN) :: j_in, k_in, l_in
 
 ! Output !
-REAL*8, INTENT (OUT) :: axp,axm,ayp,aym,azp,azm
+REAL*8, INTENT (OUT) :: axp, axm, ayp, aym, azp, azm
 
 ! Local !
 REAL*8 :: x_loc, y_loc, z_loc
 REAL*8 :: dx_loc, dy_loc, dz_loc
+REAL*8 :: dcosine
 
 !-----------------------------------------------------------------------------!
 ! Pre compute, maybe can move it into each case to reduce computation !
@@ -203,10 +204,11 @@ case(cylindrical)
 	azm = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*dy_loc
 !-----------------------------------------------------------------------------!
 case(spherical)
-	axp = xF(j_in)*xF(j_in)*(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))*dz_loc
-	axm = xF(j_in-1)*xF(j_in-1)*(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))*dz_loc
-	ayp = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*DSIN(yF(k_in))*dz_loc
-	aym = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*DSIN(yF(k_in-1))*dz_loc
+  dcosine = DABS(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))
+	axp = xF(j_in)*xF(j_in)*dcosine*dz_loc
+	axm = xF(j_in-1)*xF(j_in-1)*dcosine*dz_loc
+	ayp = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*DABS(DSIN(yF(k_in)))*dz_loc
+	aym = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*DABS(DSIN(yF(k_in-1)))*dz_loc
 	azp = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*dy_loc
 	azm = 0.5d0*(xF(j_in)**2 - xF(j_in-1)**2)*dy_loc
 !-----------------------------------------------------------------------------!
@@ -233,6 +235,7 @@ REAL*8, INTENT (OUT) :: geom_flux_p, geom_flux_c, geom_flux_m
 ! Local !
 REAL*8 :: x_loc, y_loc, z_loc
 REAL*8 :: dx_loc, dy_loc, dz_loc
+REAL*8 :: dcosine
 
 !-----------------------------------------------------------------------------!
 ! Pre compute, maybe can move it into each case to reduce computation !
@@ -277,13 +280,15 @@ case(spherical)
 		geom_flux_m = xF(j_in-1)**2
 		geom_flux_c = (xF(j_in)**3 - xF(j_in-1)**3)/3.0d0
 	case (y_dir)
-		geom_flux_p = DSIN(yF(k_in))
-		geom_flux_m = DSIN(yF(k_in-1))
-		geom_flux_c = (2.0d0*(xF(j_in)**3 - xF(j_in-1)**3)/3.0d0/(xF(j_in)**2 - xF(j_in-1)**2))*(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))
+	  dcosine = DABS(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))
+		geom_flux_p = DABS(DSIN(yF(k_in)))
+		geom_flux_m = DABS(DSIN(yF(k_in-1)))
+		geom_flux_c = (2.0d0*(xF(j_in)**3 - xF(j_in-1)**3)/3.0d0/(xF(j_in)**2 - xF(j_in-1)**2))*dcosine
 	case (z_dir)
+	  dcosine = DABS(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))
 		geom_flux_p = 1.0d0
 		geom_flux_m = 1.0d0
-		geom_flux_c = (2.0d0*(xF(j_in)**3 - xF(j_in-1)**3)/3.0d0/(xF(j_in)**2 - xF(j_in-1)**2))*(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))*dz_loc/dy_loc
+		geom_flux_c = (2.0d0*(xF(j_in)**3 - xF(j_in-1)**3)/3.0d0/(xF(j_in)**2 - xF(j_in-1)**2))*dcosine*dz_loc/dy_loc
 	end select
 !-----------------------------------------------------------------------------!
 end select
@@ -313,6 +318,7 @@ g_bz_ey_c, g_bz_ey_p
 ! Local !
 REAL*8 :: x_loc, y_loc, z_loc
 REAL*8 :: dx_loc, dy_loc, dz_loc
+REAL*8 :: dcosine
 
 !-----------------------------------------------------------------------------!
 ! Pre compute, maybe can move it into each case to reduce computation !
@@ -372,16 +378,19 @@ case(cylindrical)
 	g_bz_ex_p = 1.0d0
 !-----------------------------------------------------------------------------!
 case(spherical)
-	g_bx_ez_m	= DSIN(yF(k_in-1))
-	g_bx_ez_c = xF(j_in)*(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))
-	g_bx_ez_p = DSIN(yF(k_in))
+
+  dcosine = DABS(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))
+
+	g_bx_ez_m	= DABS(DSIN(yF(k_in-1)))
+	g_bx_ez_c = xF(j_in)*dcosine
+	g_bx_ez_p = DABS(DSIN(yF(k_in)))
 
 	g_bx_ey_m	= 1.0d0
-	g_bx_ey_c = xF(j_in)*(DCOS(yF(k_in-1)) - DCOS(yF(k_in)))*dz_loc/dy_loc
+	g_bx_ey_c = xF(j_in)*dcosine*dz_loc/dy_loc
 	g_bx_ey_p = 1.0d0
 
 	g_by_ex_m	= 1.0d0
-	g_by_ex_c = x_loc*DSIN(yF(k_in))*dz_loc
+	g_by_ex_c = x_loc*DABS(DSIN(yF(k_in)))*dz_loc
 	g_by_ex_p = 1.0d0
 
 	g_by_ez_m	= xF(j_in-1)

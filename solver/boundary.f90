@@ -116,7 +116,7 @@ ELSEIF(boundary_flag(1) == 1) THEN
   ENDDO
   !$OMP END DO
 
-ELSEIF(boundary_flag(1) >= 2) THEN     
+ELSEIF(boundary_flag(1) == 2) THEN     
      
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 1, NZ
@@ -156,7 +156,7 @@ ELSEIF(boundary_flag(2) == 1) THEN
   ENDDO
   !$OMP END DO
 
-ELSEIF(boundary_flag(2) >= 2) THEN 
+ELSEIF(boundary_flag(2) == 2) THEN 
  
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 1, NZ
@@ -202,7 +202,7 @@ ELSEIF(boundary_flag(3) == 1) THEN
   ENDDO
   !$OMP END DO
 
-ELSEIF(boundary_flag(3) >= 2) THEN   
+ELSEIF(boundary_flag(3) == 2) THEN   
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)    
   DO l = 1, NZ
@@ -242,7 +242,7 @@ ELSEIF(boundary_flag(4) == 1) THEN
   ENDDO
   !$OMP END DO
 
-ELSEIF(boundary_flag(4) >= 2) THEN
+ELSEIF(boundary_flag(4) == 2) THEN
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 1, NZ
@@ -288,7 +288,7 @@ ELSEIF(boundary_flag(5) == 1) THEN
   ENDDO
   !$OMP END DO
 
-ELSEIF(boundary_flag(5) >= 2) THEN   
+ELSEIF(boundary_flag(5) == 2) THEN   
         
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)      
   DO l = 1, NGHOST
@@ -328,7 +328,7 @@ ELSEIF(boundary_flag(6) == 1) THEN
   ENDDO
   !$OMP END DO
 
-ELSEIF(boundary_flag(6) >= 2) THEN
+ELSEIF(boundary_flag(6) == 2) THEN
    
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 1, NGHOST
@@ -410,7 +410,7 @@ ELSEIF(boundary_flag(1) == 1) THEN
   ENDDO
   !$OMP END DO 
 
-ELSEIF(boundary_flag(1) >= 2) THEN    
+ELSEIF(boundary_flag(1) == 2) THEN    
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 0, NZ
@@ -459,7 +459,7 @@ ELSEIF(boundary_flag(2) == 1) THEN
   ENDDO
   !$OMP END DO 
 
-ELSEIF(boundary_flag(2) >= 2) THEN
+ELSEIF(boundary_flag(2) == 2) THEN
   
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 0, NZ
@@ -514,7 +514,7 @@ ELSEIF(boundary_flag(3) == 1) THEN
   ENDDO 
   !$OMP END DO 
 
-ELSEIF(boundary_flag(3) >= 2) THEN    
+ELSEIF(boundary_flag(3) == 2) THEN    
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 0, NZ
@@ -563,7 +563,7 @@ ELSEIF(boundary_flag(4) == 1) THEN
   ENDDO 
   !$OMP END DO 
 
-ELSEIF(boundary_flag(4) >= 2) THEN
+ELSEIF(boundary_flag(4) == 2) THEN
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 0, NZ
@@ -618,7 +618,7 @@ ELSEIF(boundary_flag(5) == 1) THEN
   ENDDO 
   !$OMP END DO 
 
-ELSEIF(boundary_flag(5) >= 2) THEN  
+ELSEIF(boundary_flag(5) == 2) THEN  
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 1, NGHOST
@@ -667,7 +667,7 @@ ELSEIF(boundary_flag(6) == 1) THEN
   ENDDO 
   !$OMP END DO 
 
-ELSEIF(boundary_flag(6) >= 2) THEN
+ELSEIF(boundary_flag(6) == 2) THEN
 
   !$OMP DO COLLAPSE(3) SCHEDULE(STATIC)
   DO l = 1, NGHOST

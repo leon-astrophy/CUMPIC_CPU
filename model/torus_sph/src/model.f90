@@ -54,6 +54,14 @@ REAL*8 :: aym
 REAL*8 :: azp
 REAL*8 :: azm
 
+! Real, geometric factor !
+REAL*8 :: g_bx_ez_m, g_bx_ez_c, g_bx_ez_p
+REAL*8 :: g_bx_ey_m, g_bx_ey_c, g_bx_ey_p
+REAL*8 :: g_by_ex_m, g_by_ex_c, g_by_ex_p
+REAL*8 :: g_by_ez_m, g_by_ez_c, g_by_ez_p
+REAL*8 :: g_bz_ex_m, g_bz_ex_c, g_bz_ex_p
+REAL*8 :: g_bz_ey_m, g_bz_ey_c, g_bz_ey_p
+
 !---------------------------------------------------------
 
 ! Vector potential !
@@ -127,7 +135,6 @@ DO l = 1, nz
 
       ! vector potential, SANE accretion !
       IF(prim(irho,j,k,l) >= rho_cut) THEN
-        !A_phi(j,k,l) = (prim(irho,j,k,l)/rho_max)*(x_loc/3.0*DSIN(y_loc))**3*DEXP(-x_loc/400.0d0) - rho_cut
         A_phi(j,k,l) = (prim(irho,j,k,l) - rho_cut)/rho_max
       END IF
 
@@ -154,10 +161,15 @@ bcell(ibx:ibz,:,:,:) = 0.0d0
 DO l = 0, nz
   DO k = 0, ny
     DO j = 0, nx
-      CALL GET_COORD(j,k,l,x_loc,y_loc,z_loc)
-      CALL COORD_DX(j,k,l,dx_loc,dy_loc,dz_loc)
-      prim(ibx,j,k,l) = (DSIN(yF(k))*A_corner(j,k,l) - SIN(yF(k-1))*A_corner(j,k-1,l))/(xF(j)*(DCOS(yF(k-1)) - DCOS(yF(k))))
-      prim(iby,j,k,l) = - (xF(j)*A_corner(j,k,l) - xF(j-1)*A_corner(j-1,k,l))/(x_loc*dx_loc)
+
+      ! Get geometric factor !
+      CALL GEOM_CT(j,k,l,g_bx_ez_m, g_bx_ez_c, g_bx_ez_p, g_bx_ey_m, g_bx_ey_c, g_bx_ey_p, g_by_ex_m, g_by_ex_c, g_by_ex_p, &
+      g_by_ez_m, g_by_ez_c, g_by_ez_p, g_bz_ex_m, g_bz_ex_c, g_bz_ex_p, g_bz_ey_m, g_bz_ey_c, g_bz_ey_p)
+
+      ! corss product !
+      prim(ibx,j,k,l) = (g_bx_ez_p*A_corner(j,k,l) - g_bx_ez_m*A_corner(j,k-1,l))/g_bx_ez_c
+      prim(iby,j,k,l) = - (g_by_ez_p*A_corner(j,k,l) - g_by_ez_m*A_corner(j-1,k,l))/g_by_ez_c 
+
     END DO
   END DO
 END DO
@@ -230,7 +242,7 @@ DO l = 1, nz
       div_b = (axp*prim(ibx,j,k,l) - axm*prim(ibx,j-1,k,l)) &
             + (ayp*prim(iby,j,k,l) - aym*prim(iby,j,k-1,l)) &
             + (azp*prim(ibz,j,k,l) - azm*prim(ibz,j,k,l-1))
-      maxdb = MAX(maxdb, div_b)
+      maxdb = MAX(maxdb, DABS(div_b))
     END DO
   END DO
 END DO

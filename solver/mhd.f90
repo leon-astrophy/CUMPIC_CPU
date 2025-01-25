@@ -48,7 +48,7 @@ DO l = 1, nz
       div_b = (axp*prim(ibx,j,k,l) - axm*prim(ibx,j-1,k,l)) &
             + (ayp*prim(iby,j,k,l) - aym*prim(iby,j,k-1,l)) &
             + (azp*prim(ibz,j,k,l) - azm*prim(ibz,j,k,l-1))
-      maxdb = MAX(maxdb, div_b)
+      maxdb = MAX(maxdb, DABS(div_b))
     END DO
   END DO
 END DO

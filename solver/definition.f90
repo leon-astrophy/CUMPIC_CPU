@@ -82,9 +82,7 @@ INTEGER, PARAMETER :: coordinate = spherical
 ! 0 = periodic
 ! 1 = outgoing (1st derivative = 0)
 ! 2 = reflecting boundary (depend on scalar/vector)
-! 3 = axis-symmetric
-! 4 = equatorial-symmetric
-INTEGER, PARAMETER :: boundary_flag(6) = (/1,1,3,3,0,0/)
+INTEGER, PARAMETER :: boundary_flag(6) = (/1,1,2,2,0,0/)
 
 ! Starting position of the grid !
 REAL*8, PARAMETER :: x_start = 0.0d0
@@ -116,7 +114,7 @@ INTEGER, PARAMETER :: nz = nztot/NZCPU
 REAL*8, PARAMETER :: cfl = 0.80D0			
 
 ! Maximum time to be simulated in the model
-REAL*8, PARAMETER :: total_time = 100.0d0
+REAL*8, PARAMETER :: total_time = 1000.0d0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for Output setting
@@ -125,11 +123,11 @@ REAL*8, PARAMETER :: total_time = 100.0d0
 
 ! Physical time interval for all log file
 REAL*8 :: output_logtime_last = 0.0D0
-REAL*8, PARAMETER :: output_logtime = 100.0d0                            
+REAL*8, PARAMETER :: output_logtime = 50.0d0                            
 
 ! Physical time interval for each hydro profile
 REAL*8 :: output_profiletime_last = 0.0D0
-REAL*8, PARAMETER :: output_profiletime = 1.0d0    
+REAL*8, PARAMETER :: output_profiletime = 50.0d0    
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Section for riemann solvers

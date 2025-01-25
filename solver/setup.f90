@@ -139,32 +139,12 @@ bfac_zout(:) = 1
 IF(boundary_flag(1) == 2) THEN
 	bfac_xin(ivx) = -1
 	bfac_xin(ibx) = -1
-ELSEIF(boundary_flag(1) == 3) THEN
-	bfac_xin(ivx) = -1
-	bfac_xin(ibx) = -1
-	bfac_xin(ivz) = -1
-	bfac_xin(ibz) = -1
-ELSEIF(boundary_flag(1) == 4) THEN
-	IF(mpi_rank == 0) THEN 
-		WRITE (*,*) 'Equatorial symmetry is not allowed for the x-boundary'
-	END IF
-	STOP
 END IF
 
 ! Flip signs, x outer boundary !
 IF(boundary_flag(2) == 2) THEN
 	bfac_xout(ivx) = -1
 	bfac_xout(ibx) = -1
-ELSEIF(boundary_flag(2) == 3) THEN
-	bfac_xout(ivx) = -1
-	bfac_xout(ibx) = -1
-	bfac_xout(ivz) = -1
-	bfac_xout(ibz) = -1
-ELSEIF(boundary_flag(2) == 4) THEN
-	IF(mpi_rank == 0) THEN 
-		WRITE (*,*) 'Equatorial symmetry is not allowed for the x-boundary'
-	END IF
-	STOP
 END IF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -172,30 +152,12 @@ END IF
 IF(boundary_flag(3) == 2) THEN
 	bfac_yin(ivy) = -1
 	bfac_yin(iby) = -1
-ELSEIF(boundary_flag(3) == 3) THEN
-	bfac_yin(ivy) = -1
-	bfac_yin(iby) = -1
-	bfac_yin(ivz) = -1
-	bfac_yin(ibz) = -1
-ELSEIF(boundary_flag(3) == 4) THEN
-	bfac_yin(ivy) = -1
-	bfac_yin(ibx) = -1
-	bfac_yin(ibz) = -1
 END IF
 
 ! Flip signs, y outer boundary !
 IF(boundary_flag(4) == 2) THEN
 	bfac_yout(ivy) = -1
 	bfac_yout(iby) = -1
-ELSEIF(boundary_flag(4) == 3) THEN
-	bfac_yout(ivy) = -1
-	bfac_yout(iby) = -1
-	bfac_yout(ivz) = -1
-	bfac_yout(ibz) = -1
-ELSEIF(boundary_flag(4) == 4) THEN
-	bfac_yout(ivy) = -1
-	bfac_yout(ibx) = -1
-	bfac_yout(ibz) = -1
 END IF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -203,30 +165,12 @@ END IF
 IF(boundary_flag(5) == 2) THEN
 	bfac_zin(ivz) = -1
 	bfac_zin(ibz) = -1
-ELSEIF(boundary_flag(5) == 3) THEN
-	IF(mpi_rank == 0) THEN 
-		WRITE (*,*) 'Axial symmetry is not allowed for the z-boundary'
-	END IF
-	STOP
-ELSEIF(boundary_flag(5) == 4) THEN
-	bfac_zin(ivz) = -1
-	bfac_zin(ibx) = -1
-	bfac_zin(iby) = -1
 END IF
 
 ! Flip signs, z outer boundary !
 IF(boundary_flag(6) == 2) THEN
 	bfac_zout(ivz) = -1
 	bfac_zout(ibz) = -1
-ELSEIF(boundary_flag(6) == 3) THEN
-	IF(mpi_rank == 0) THEN 
-		WRITE (*,*) 'Axial symmetry is not allowed for the z-boundary'
-	END IF
-	STOP
-ELSEIF(boundary_flag(6) == 4) THEN
-	bfac_zout(ivz) = -1
-	bfac_zout(ibx) = -1
-	bfac_zout(iby) = -1
 END IF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

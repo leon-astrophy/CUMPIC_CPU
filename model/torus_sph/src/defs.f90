@@ -18,7 +18,7 @@ REAL*8, PARAMETER :: Rin = 3.0d0
 REAL*8, PARAMETER :: Rout = 23.0d0
 
 ! Off-set along the pole to avoid singularity !
-REAL*8, PARAMETER :: off_set = 1.0e-6
+REAL*8, PARAMETER :: off_set = 0.02
 
 ! Compression along the theta direction !
 REAL*8, PARAMETER :: s_comp = 0.5D0
