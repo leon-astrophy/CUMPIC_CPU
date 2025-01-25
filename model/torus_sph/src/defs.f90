@@ -15,7 +15,7 @@ SAVE
 REAL*8, PARAMETER :: Rin = 3.0d0
 
 ! Outer radial boundary !
-REAL*8, PARAMETER :: Rout = 23.0d0
+REAL*8, PARAMETER :: Rout = 50.0d0
 
 ! Off-set along the pole to avoid singularity !
 REAL*8, PARAMETER :: off_set = 0.02
